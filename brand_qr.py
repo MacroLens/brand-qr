@@ -1,8 +1,9 @@
 """AWS Lambda to create QR codes with centered logo.
 """
 from __future__ import annotations
+import base64
+import json
 import logging
-import sys
 
 import qrcode
 from PIL import Image
@@ -70,20 +71,36 @@ def place_logo(qr_code: Image, logo: Image, logo_scale: float = 0.4) -> Image:
     return qr_code
 
 
-def main() -> None:
+def decode_str(enc: str) -> str:
+    """Takes a Base64 encoded str, and decodes to ASCII.
+    """
+    # Add extra padding incase encoding does not include it.
+    return base64.urlsafe_b64decode(enc.encode("ascii") + b'==').decode("ascii")
+
+
+def main(event, context) -> dict:
     """Create a QR code and saves it to qr.png.
     """
-    url = "http://youtube.com"
-    logging.basicConfig(level=logging.DEBUG)
-    img = create_qr(url)
+    query = event["queryStringParameters"]
+
+    if "url" not in query:
+        body = {"message": "Invalid query."}
+        response = {"statusCode": 400, "body": json.dumps(body)}
+        return response
+
+    url = query["url"]
+    img = create_qr(decode_str(url))
     if not img:
         logging.error("No QR code image was created.")
-        sys.exit(1)
+        body = {"message": "URL is too long."}
+        response = {"statusCode": 400, "body": json.dumps(body)}
+        return response
+
     img = img.copy()  # Explicit way of casting to PIL Image
     with Image.open("logo.png") as logo:
         qr_code = place_logo(img, logo)
         qr_code.save("qr.png")
 
-
-if __name__ == "__main__":
-    main()
+    body = {"message": "Created a QR code."}
+    response = {"statusCode": 200, "body": json.dumps(body)}
+    return response

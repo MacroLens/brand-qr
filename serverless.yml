@@ -1,0 +1,17 @@
+service: brand-qr-generator
+configValidationMode: error
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+
+functions:
+  brand_qr:
+    handler: brand_qr.main
+    events:
+      - httpApi:
+          path: /brand-qr-code?
+          method: GET
+plugins:
+  - serverless-python-requirements
