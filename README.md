@@ -11,3 +11,26 @@ Our generator takes your link, or other encodable data, and embeds it directly i
 ### Lambda
 ### API
 ### Web server
+
+
+## Building
+### Download Serverless Dependency Plugin
+```bash
+serverless plugin install -n serverless-python-requirements
+```
+
+### Set Up VirtualEnv
+Install virtualenv
+```bash
+pip install virtualenv
+virtualenv env --python=python3
+source env/bin/activate
+```
+Install dependencies
+```bash
+pip install -r requirements.txt
+```
+Unset your virtualenv
+```bash
+deactivate
+```
