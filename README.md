@@ -1,4 +1,4 @@
-# QR Code Generator.
+# Branded QR Code Generator.
 ## Problem
 The goal of this project is to make an easy-to-use, deployable, compute efficient, and brandable qr code generator.
 
