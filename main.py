@@ -7,7 +7,8 @@ import sys
 import qrcode
 from PIL import Image
 
-def create_qr(url:str) -> qrcode.image.pil.PilImage | None:
+
+def create_qr(url: str) -> qrcode.image.pil.PilImage | None:
     """Takes an http URL and returns a high error correction
     QR code. Version is forced to enforce size. Returns None
     if an error occurs.
@@ -27,7 +28,8 @@ def create_qr(url:str) -> qrcode.image.pil.PilImage | None:
     img = qr_code.make_image(fill_color="black", back_color="white")
     return img
 
-def paste_centered(bg_im:Image, fg_im:Image) -> Image:
+
+def paste_centered(bg_im: Image, fg_im: Image) -> Image:
     """takes fg and centers it on bg.
     Assumes that bg has larger or equal dimensions than fg
     Returns a new Image
@@ -43,7 +45,8 @@ def paste_centered(bg_im:Image, fg_im:Image) -> Image:
     bg_im.paste(im=fg_im, box=offset, mask=fg_im)
     return bg_im
 
-def place_logo(qr_code:Image, logo:Image, logo_scale:float=0.4) -> Image:
+
+def place_logo(qr_code: Image, logo: Image, logo_scale: float = 0.4) -> Image:
     """Creates a composite image of the qr_code and logo.
     Creates copies of images and does not transform original.
     The logo will be scaled to logo_scale*qr_code.size.
@@ -66,19 +69,21 @@ def place_logo(qr_code:Image, logo:Image, logo_scale:float=0.4) -> Image:
 
     return qr_code
 
+
 def main() -> None:
     """Create a QR code and saves it to qr.png.
     """
-    url="http://youtube.com"
+    url = "http://youtube.com"
     logging.basicConfig(level=logging.DEBUG)
     img = create_qr(url)
     if not img:
         logging.error("No QR code image was created.")
         sys.exit(1)
-    img = img.copy() # Explicit way of casting to PIL Image
+    img = img.copy()  # Explicit way of casting to PIL Image
     with Image.open("logo.png") as logo:
-        qr_code = place_logo(img,logo)
+        qr_code = place_logo(img, logo)
         qr_code.save("qr.png")
+
 
 if __name__ == "__main__":
     main()
