@@ -34,3 +34,11 @@ Unset your virtualenv
 ```bash
 deactivate
 ```
+
+### Test Invocations
+```local_request.json``` uses a base64 url encoded string for the URL.
+To test the generator use the following command:
+```bash
+sls invoke local --function brand_qr --path local_request.json
+```
+
