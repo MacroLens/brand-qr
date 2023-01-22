@@ -27,21 +27,21 @@ def create_qr(url:str) -> qrcode.image.pil.PilImage | None:
     img = qr_code.make_image(fill_color="black", back_color="white")
     return img
 
-def paste_centered(bg:Image, fg:Image) -> Image:
+def paste_centered(bg_im:Image, fg_im:Image) -> Image:
     """takes fg and centers it on bg.
     Assumes that bg has larger or equal dimensions than fg
     Returns a new Image
     """
-    bg = bg.copy()
-    fg = fg.copy()
-    bg_width, bg_height = bg.size
-    fg_width, fg_height = fg.size
+    bg_im = bg_im.copy()
+    fg_im = fg_im.copy()
+    bg_width, bg_height = bg_im.size
+    fg_width, fg_height = fg_im.size
 
     offset = ((bg_width - fg_width)//2,
               (bg_height - fg_height)//2)
-    
-    bg.paste(im=fg, box=offset, mask=fg)
-    return bg
+
+    bg_im.paste(im=fg_im, box=offset, mask=fg_im)
+    return bg_im
 
 def place_logo(qr_code:Image, logo:Image, logo_scale:float=0.4) -> Image:
     """Creates a composite image of the qr_code and logo.
@@ -52,16 +52,16 @@ def place_logo(qr_code:Image, logo:Image, logo_scale:float=0.4) -> Image:
     """
     qr_code = qr_code.copy()
     qr_code = qr_code.convert(mode="RGBA")
-    logging.debug("QR_Code size {}".format(qr_code.size))
+    logging.debug("QR_Code size (%i,%i)", qr_code.size[0], qr_code.size[1])
 
     logo = logo.copy()
     logo = logo.convert(mode="RGBA")
     logo = logo.resize(tuple(int(dim*logo_scale) for dim in qr_code.size))
+    logging.debug("Logo size (%i,%i)", logo.size[0], logo.size[1])
+    logging.debug("Logo size %s", logo.mode)
 
     transparent = Image.new(mode="RGBA", size=qr_code.size, color="#00000000")
     resized_logo = paste_centered(transparent, logo)
-    logging.debug("Logo size {}".format(logo.size))
-    logging.debug("Logo size {}".format(logo.mode))
     qr_code.paste(im=resized_logo, mask=resized_logo)
 
     return qr_code
