@@ -69,6 +69,7 @@ def place_logo(qr_code:Image, logo:Image, logo_scale:float=0.4) -> Image:
 def main() -> None:
     """Create a QR code and saves it to qr.png.
     """
+    url="http://youtube.com"
     logging.basicConfig(level=logging.DEBUG)
     img = create_qr(url)
     if not img:
