@@ -83,6 +83,11 @@ def decode_str(enc: str) -> str:
 def main(event, context) -> dict:
     """Create a QR code and saves it to qr.png.
     """
+    if "queryStringParameters" not in event:
+        body = {"message": "Invalid request."}
+        response = {"statusCode": 200, "body": json.dumps(body)}
+        return response
+
     query = event["queryStringParameters"]
 
     if "url" not in query:
