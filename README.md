@@ -1,4 +1,4 @@
-# Branded QR Code Generator.
+# Branded QR Code Generator
 ## Problem
 The goal of this project is to make an easy-to-use, deployable, compute efficient, and brandable qr code generator.
 
@@ -6,12 +6,12 @@ Most online generators make your QR code expire. So instead of linking your dire
 
 Our generator takes your link, or other encodable data, and embeds it directly into the QR code. It also has the free feature of adding your brand to the QR code.
 
-## Goals
-
-### Lambda
-### API
-### Web server
-
+## API Usage
+The API responds to get requests with the following query:
+```
+https://api.host.fake/brand-qr-code?url={URL}
+```
+Currently it only takes URLs that have been Base64 URL encoded. The API outputs a Base64 encoded PNG file.
 
 ## Building
 ### Download Serverless Dependency Plugin
@@ -68,4 +68,3 @@ To delete your your service use the following:
 ```bash
 serverless remove
 ```
-
