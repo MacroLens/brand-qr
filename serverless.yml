@@ -1,3 +1,5 @@
+org: macrolens
+app: brand-qr-generator
 service: brand-qr-generator
 configValidationMode: error
 frameworkVersion: '3'
@@ -11,7 +13,7 @@ functions:
     handler: brand_qr.main
     events:
       - httpApi:
-          path: /brand-qr-code?
+          path: /brand-qr-code
           method: GET
 plugins:
   - serverless-python-requirements
