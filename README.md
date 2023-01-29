@@ -62,5 +62,9 @@ If you make changes to code only use
 serverless deploy function -f brand_qr
 ```
 
+To delete your your service use the following:
+```bash
+serverless remove
+```
 
 You will see the API on your dashboard.
