@@ -56,6 +56,8 @@ After connecting your AWS account, deploy the application. Run this command when
 ```bash
 serverless deploy #--verbose
 ```
+After this the API will show up on your Serveless dashboard.
+
 
 If you make changes to code only use
 ```bash
@@ -67,4 +69,3 @@ To delete your your service use the following:
 serverless remove
 ```
 
-You will see the API on your dashboard.
