@@ -23,7 +23,7 @@ serverless plugin install -n serverless-python-requirements
 Install virtualenv
 ```bash
 pip install virtualenv
-virtualenv env --python=python3
+virtualenv --python=python3.9 env
 source env/bin/activate
 ```
 Install dependencies
@@ -42,3 +42,25 @@ To test the generator use the following command:
 sls invoke local --function brand_qr --path local_request.json
 ```
 
+
+## Deploy
+### Setup serverless
+In your terminal
+```bash
+serverless
+```
+Go through the prompts and setup an account. Connect AWS to your dashboard.
+
+After connecting your AWS account, deploy the application. Run this command whenever there are changes to```serverless.yml```:
+
+```bash
+serverless deploy #--verbose
+```
+
+If you make changes to code only use
+```bash
+serverless deploy function -f brand_qr
+```
+
+
+You will see the API on your dashboard.
