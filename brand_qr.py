@@ -2,6 +2,7 @@
 """
 from __future__ import annotations
 import base64
+import io
 import json
 import logging
 
@@ -9,7 +10,7 @@ import qrcode
 from PIL import Image
 
 
-def create_qr(url: str) -> qrcode.image.pil.PilImage | None:
+def create_qr(url: str, context) -> qrcode.image.pil.PilImage | None:
     """Takes an http URL and returns a high error correction
     QR code. Version is forced to enforce size. Returns None
     if an error occurs.
@@ -23,7 +24,8 @@ def create_qr(url: str) -> qrcode.image.pil.PilImage | None:
     qr_code.add_data(url)
     try:
         qr_code.make(fit=False)
-    except qrcode.exceptions.DataOverflowError:
+    except qrcode.exceptions.DataOverflowError as e:
+        context.serverless_sdk.capture_exception(e)
         logging.error("URL is too long.")
         return None
     img = qr_code.make_image(fill_color="black", back_color="white")
@@ -85,22 +87,26 @@ def main(event, context) -> dict:
 
     if "url" not in query:
         body = {"message": "Invalid query."}
-        response = {"statusCode": 400, "body": json.dumps(body)}
+        response = {"statusCode": 200, "body": json.dumps(body)}
         return response
 
     url = query["url"]
-    img = create_qr(decode_str(url))
+    img = create_qr(decode_str(url), context)
     if not img:
         logging.error("No QR code image was created.")
         body = {"message": "URL is too long."}
-        response = {"statusCode": 400, "body": json.dumps(body)}
+        response = {"statusCode": 200, "body": json.dumps(body)}
         return response
 
     img = img.copy()  # Explicit way of casting to PIL Image
     with Image.open("logo.png") as logo:
         qr_code = place_logo(img, logo)
-        qr_code.save("qr.png")
 
-    body = {"message": "Created a QR code."}
+    with io.BytesIO() as out:
+        qr_code.save(out,format="png")
+        contents = out.getvalue()
+
+    body = {"message": "Created a QR code.",
+            "image": base64.urlsafe_b64encode(contents).decode("ascii")}
     response = {"statusCode": 200, "body": json.dumps(body)}
     return response
