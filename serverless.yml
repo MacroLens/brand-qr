@@ -1,5 +1,3 @@
-org: macrolens
-app: brand-qr-generator
 service: brand-qr-generator
 configValidationMode: error
 frameworkVersion: '3'
